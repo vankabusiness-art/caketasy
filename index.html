@@ -371,16 +371,6 @@ dl.sp dd.yes,dl.sp dd.no,dl.sp dd.add{border-radius:10px;padding:3px 10px;font-w
 @media(prefers-reduced-motion:reduce){#intro,#wipe,.pk{display:none!important}.bubble{animation:none}}
 #intro.open .ib{animation:ibOut .6s ease forwards}
 @keyframes ibOut{from{opacity:1;transform:translate(-50%,-50%)}to{opacity:0;transform:translate(-50%,-90%) scale(.8)}}
-.vine{display:block!important;width:20px;opacity:.85}
-@media(min-width:1240px){.vine{width:64px}}
-.nv{width:158px;height:64px;left:236px}
-@media(max-width:900px){.nv{right:66px}}
-.fab,.fabpop{transition:opacity .25s,transform .25s cubic-bezier(.34,1.6,.5,1),bottom .35s}
-#bar.on~.fab,.fab{bottom:calc(16px + var(--bh,0px) + env(safe-area-inset-bottom,0px))}
-#bar.on~.fabpop,.fabpop{bottom:calc(78px + var(--bh,0px) + env(safe-area-inset-bottom,0px))}
-.sc .fab{opacity:0;transform:translateY(12px);pointer-events:none}
-.sc .fabpop{visibility:hidden}
-@media(max-width:700px){.fab{right:12px;width:48px;height:48px;min-height:0;padding:0;justify-content:center}.fab span{display:none}.fabpop{right:12px;max-width:200px;font-size:.85rem}}
 </style>
 </head>
 <body><div id="intro" aria-hidden="true"><div class="cur l"></div><div class="cur r"></div><div class="ib"><svg width="86" height="57" viewBox="0 0 60 40" style="color:#E48C9B"><use href="#bw" width="60" height="40"/></svg><b>Caketasy Service</b></div></div><div id="wipe" aria-hidden="true"></div><div id="prog" aria-hidden="true"></div><div class="vine" id="vL" aria-hidden="true"></div><div class="vine" id="vR" aria-hidden="true"></div>
@@ -554,7 +544,7 @@ dl.sp dd.yes,dl.sp dd.no,dl.sp dd.add{border-radius:10px;padding:3px 10px;font-w
 
 <div id="bar" role="status"><span>Estimasi <b id="bTot"></b></span><span>DP 50% <b id="bDp"></b></span><a class="btn" href="#order">Isi brief</a></div>
 
-<a id="waFab" class="fab" target="_blank" rel="noopener" aria-label="Tanya lewat WhatsApp"><svg width="30" height="20" viewBox="0 0 60 40" aria-hidden="true"><use href="#bw" width="60" height="40"/></svg><span>Tanya aku</span></a><div id="fabPop" class="fabpop" role="status" hidden>Ada yang mau ditanyain? Chat aku ya <svg width="14" height="13" viewBox="0 0 24 22" aria-hidden="true" style="color:#E48C9B"><use href="#ht" width="24" height="22"/></svg><button type="button" id="fabX" aria-label="Tutup">&times;</button></div>
+<a id="waFab" class="fab" target="_blank" rel="noopener" aria-label="Tanya lewat WhatsApp"><svg width="30" height="20" viewBox="0 0 60 40" aria-hidden="true"><use href="#bw" width="60" height="55"/></svg><span>Tanya aku</span></a><div id="fabPop" class="fabpop" role="status" hidden>Ada yang mau ditanyain? Chat aku ya <svg width="14" height="13" viewBox="0 0 24 22" aria-hidden="true" style="color:#E48C9B"><use href="#ht" width="24" height="22"/></svg><button type="button" id="fabX" aria-label="Tutup">&times;</button></div>
 <dialog id="lb" aria-label="Screenshot testimoni diperbesar"><button class="x" id="lbx" aria-label="Tutup">&times;</button><img id="lbi" alt="Screenshot chat testimoni klien"></dialog>
 <dialog id="inv" aria-label="Invoice"><button class="x" id="invx" aria-label="Tutup">&times;</button><div class="inv" id="invBody"></div></dialog>
 
@@ -755,18 +745,16 @@ $("#tg").style.gridTemplateColumns=`repeat(${n},1fr)`;
 $("#tg").innerHTML=cols.map((c,ci)=>`<div class="tcol" data-sp="${[.03,-.035,.04,-.025][ci]}">${c.map(([t,i])=>`<button class="pola tp${i%4}" data-rv="pop" data-i="${i}" style="--r:${[-2.5,1.8,-1.2,2.4,-1.8][i%5]}deg;--i:${ci}"><img src="${t.imageUrl}" alt="Pesan klien: ${esc(t.alt)}" width="${t.w}" height="${t.h}" loading="lazy"></button>`).join("")}</div>`).join("");
 watch()}
 
-const VINE={H:0,len:0,W:0,els:[],k:0};
+const VINE={H:0,len:0};
 function buildVine(){
-const W=innerWidth>=1240?64:20,H=document.documentElement.scrollHeight;if(W===VINE.W&&Math.abs(H-VINE.H)<40)return;VINE.W=W;VINE.H=H;
-const big=W>30,c=W/2,amp=big?14:3.2,lw=big?26:11,fs=big?18:10,step=big?96:84;
-let d=`M${c} 0`,items="";
-for(let y=0;y<=H;y+=24)d+=` L${(c+Math.sin(y/96)*amp).toFixed(1)} ${y}`;
-for(let y=70,i=0;y<H-40;y+=step,i++){const x=c+Math.sin(y/96)*amp,s=i%2?1:-1;
-items+=`<g transform="translate(${x.toFixed(1)} ${y}) scale(${s} 1) rotate(${-25+(i%3)*10})"><use class="lv" data-y="${y}" href="#lf" width="${lw}" height="${lw/2}"/></g>`;
-if(i%5===3)items+=`<g transform="translate(${(x-fs/2).toFixed(1)} ${y-fs/2})"><use class="lv fb" data-y="${y}" href="#fl" width="${fs}" height="${fs}" style="color:${["#F4ACB7","#B9A3E3","#F6C453"][(i/5|0)%3]}"/></g>`}
-["#vL","#vR"].forEach(id=>$(id).innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path class="vp" d="${d}" fill="none" stroke="#8A9A70" stroke-width="${big?2.5:1.6}" stroke-linecap="round"/>${items}</svg>`);
-VINE.len=$("#vL .vp").getTotalLength();$$(".vp").forEach(p=>p.style.strokeDasharray=VINE.len);
-VINE.els=$$(".lv").map(l=>[l,+l.dataset.y]).sort((a,b)=>a[1]-b[1]);VINE.k=0}
+if(innerWidth<1240)return;const H=document.documentElement.scrollHeight;if(Math.abs(H-VINE.H)<40)return;VINE.H=H;
+let d="M32 0",items="";
+for(let y=0;y<=H;y+=24)d+=` L${(32+Math.sin(y/96)*14).toFixed(1)} ${y}`;
+for(let y=70,i=0;y<H-40;y+=96,i++){const x=32+Math.sin(y/96)*14,s=i%2?1:-1;
+items+=`<g transform="translate(${x.toFixed(1)} ${y}) scale(${s} 1) rotate(${-25+(i%3)*10})"><use class="lv" data-y="${y}" href="#lf" width="26" height="13"/></g>`;
+if(i%5===3)items+=`<g transform="translate(${(x-9).toFixed(1)} ${y-9})"><use class="lv fb" data-y="${y}" href="#fl" width="18" height="18" style="color:${["#F4ACB7","#B9A3E3","#F6C453"][(i/5|0)%3]}"/></g>`}
+["#vL","#vR"].forEach(id=>$(id).innerHTML=`<svg width="64" height="${H}" viewBox="0 0 64 ${H}" aria-hidden="true"><path class="vp" d="${d}" fill="none" stroke="#8A9A70" stroke-width="2.5" stroke-linecap="round"/>${items}</svg>`);
+VINE.len=$("#vL .vp").getTotalLength();$$(".vp").forEach(p=>p.style.strokeDasharray=VINE.len)}
 
 function frame(){
 const y=scrollY,vh=innerHeight,H=document.documentElement.scrollHeight;
@@ -776,7 +764,7 @@ if(!MOB)$$(".fx").forEach(el=>{const r=el.parentElement.getBoundingClientRect();
 const off=Math.max(-500,Math.min(500,r.top+r.height/2-vh/2));
 el.style.transform=`translate3d(${el.closest(".hero")?(MX*240*el.dataset.sp).toFixed(1):0}px,${(off*el.dataset.sp).toFixed(1)}px,0) rotate(${((+el.dataset.rot||0)+off*.02).toFixed(1)}deg)`});
 if(!MOB)$$(".tcol").forEach(c=>{const r=c.parentElement.getBoundingClientRect();if(r.bottom<0||r.top>vh)return;c.style.transform=`translateY(${((r.top+r.height/2-vh/2)*c.dataset.sp).toFixed(1)}px)`});
-if(VINE.len){const lim=y+vh*.8;$$(".vp").forEach(p=>p.style.strokeDashoffset=VINE.len*(1-Math.min(1,(y+vh*.85)/H)));let k=VINE.k;while(k<VINE.els.length&&VINE.els[k][1]<lim){VINE.els[k][0].classList.add("on");k++}while(k>0&&VINE.els[k-1][1]>=lim){k--;VINE.els[k][0].classList.remove("on")}VINE.k=k}}
+if(innerWidth>=1240&&VINE.len){const lim=y+vh*.8;$$(".vp").forEach(p=>p.style.strokeDashoffset=VINE.len*(1-Math.min(1,(y+vh*.85)/H)));$$(".lv").forEach(l=>l.classList.toggle("on",+l.dataset.y<lim))}}
 let tick=false;
 const onScroll=()=>{if(!tick){tick=true;requestAnimationFrame(()=>{tick=false;frame()})}};
 
@@ -785,7 +773,6 @@ $$("[data-count]").forEach(n=>co.observe(n));
 
 
 const MOB=matchMedia("(max-width:900px),(pointer:coarse)").matches;
-let RBvis=false;
 const vc=b=>/^Tidak termasuk/.test(b)?"no":/^\+Rp/.test(b)?"add":/^(Termasuk|Dicek|Gratis)|Termasuk/.test(b)?"yes":"";
 const TAG={basic:"Simpel dan hemat",standard:"Paling pas buat kebanyakan orang",premium:"Lengkap, cepat, dan diprioritaskan"};
 let MX=0,MY=0,sw=0,swT=0,lastY=0,swRun=false;
@@ -793,14 +780,14 @@ const flowerPoly=(n,a)=>{const p=[];for(let i=0;i<120;i++){const t=i/120*Math.PI
 let K=0;function splitW(n,cls){[...n.childNodes].forEach(c=>{if(c.nodeType===3){const f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(t=>{if(!t)return;if(/^\s+$/.test(t)){f.append(t);return}const w=document.createElement("span");w.className=cls;if(cls==="wd")w.innerHTML=`<span style="--k:${K++}">${esc(t)}</span>`;else w.textContent=t;f.append(w)});c.replaceWith(f)}else splitW(c,cls)})}
 function tornEdges(){$$("section.alt").forEach((s,si)=>{const mk=(cls,seed)=>{let d="M0 26";for(let i=0;i<=60;i++){const r=Math.abs(Math.sin((i+1)*12.9898+seed*78.233)*43758.5453)%1;d+=` L${(i*1000/60).toFixed(0)} ${(4+r*16).toFixed(1)}`}return `<svg class="torn ${cls}" viewBox="0 0 1000 26" preserveAspectRatio="none" aria-hidden="true"><path d="${d} L1000 26Z"/></svg>`};s.insertAdjacentHTML("afterbegin",mk("t",si+1));s.insertAdjacentHTML("beforeend",mk("b",si+7))})}
 function cornerVine(){const st=[[14,46],[40,28],[64,52],[90,34],[116,48]];
-$("#nv").innerHTML=`<svg width="158" height="64" viewBox="-14 0 158 64" style="overflow:visible">${st.map(([x,L],i)=>`<g class="cs" data-i="${i}" style="transform-origin:${x}px 0px"><path d="M${x} 0C${x+8} ${L*.3} ${x-8} ${L*.6} ${x+2} ${L}" fill="none" stroke="#8A9A70" stroke-width="2"/>${Array.from({length:Math.floor(L/24)},(_,j)=>`<g transform="translate(${x+(j%2?3:-3)} ${14+j*24}) scale(${j%2?1:-1} 1) rotate(${-20+j*4})"><use href="#lf" width="24" height="12"/></g>`).join("")}${i%2?`<use href="#fl" x="${x-9}" y="${L-8}" width="18" height="18" style="color:#F4ACB7"/>`:""}</g>`).join("")}</svg>`}
+$("#nv").innerHTML=`<svg width="130" height="60" viewBox="0 0 130 60">${st.map(([x,L],i)=>`<g class="cs" data-i="${i}" style="transform-origin:${x}px 0px"><path d="M${x} 0C${x+8} ${L*.3} ${x-8} ${L*.6} ${x+2} ${L}" fill="none" stroke="#8A9A70" stroke-width="2"/>${Array.from({length:Math.floor(L/24)},(_,j)=>`<g transform="translate(${x+(j%2?3:-3)} ${14+j*24}) scale(${j%2?1:-1} 1) rotate(${-20+j*4})"><use href="#lf" width="24" height="12"/></g>`).join("")}${i%2?`<use href="#fl" x="${x-9}" y="${L-8}" width="18" height="18" style="color:#F4ACB7"/>`:""}</g>`).join("")}</svg>`}
 function swayStep(){sw+=(swT-sw)*.18;swT*=.9;$$(".cs").forEach(g=>g.style.transform=`rotate(${(sw*(.5+.18*g.dataset.i)).toFixed(2)}deg)`);if(Math.abs(sw)>.03||Math.abs(swT)>.03)requestAnimationFrame(swayStep);else swRun=false}
 let rbU=0;
 function immersive(y,vh){
 const dy=y-lastY;lastY=y;swT=Math.max(-16,Math.min(16,swT+dy*.25));if(!swRun){swRun=true;requestAnimationFrame(swayStep)}
 const tk=$("#tk");if(tk&&tk.firstChild){const w=tk.firstChild.offsetWidth||600;tk.style.transform=`translateX(${-((y*.5)%w)}px)`}
 const fi=$("#flw img");if(fi)fi.style.transform=`scale(${(1+Math.min(.14,y/Math.max(1,vh)*.07)).toFixed(3)})`;
-const rb=RBvis?$("#rbt"):null;if(rb){if(!rbU)rbU=(rb.getComputedTextLength()||1800)/9;rb.setAttribute("startOffset",-((y*.8)%rbU))}
+const rb=MOB?null:$("#rbt");if(rb){if(!rbU)rbU=(rb.getComputedTextLength()||1800)/9;rb.setAttribute("startOffset",-((y*.8)%rbU))}
 const ring=$("#ring");if(ring)ring.style.transform=`rotate(${(y*.06).toFixed(1)}deg)`;
 const fl=$("#flw");if(fl)fl.style.transform=`translate(${(MX*10).toFixed(1)}px,${(MY*8).toFixed(1)}px)`;
 const mf=$$("#mf .w");if(mf.length){const r=$("#mf").getBoundingClientRect(),p=Math.max(0,Math.min(1,(vh*.85-r.top)/(vh*.5+r.height)));mf.forEach((w,i)=>w.classList.toggle("on",i/mf.length<p*1.15))}
@@ -824,10 +811,7 @@ $("#waMain").href=WA("Halo Caketasy Service, aku mau tanya dulu ya.");$("#waFab"
 $("#chips").innerHTML=CHIPS.map(([l,t])=>`<a class="chip" data-rv="pop" href="${WA(t)}" target="_blank" rel="noopener">${l}</a>`).join("");
 setTimeout(()=>{$("#intro").classList.add("open");document.documentElement.classList.add("go")},RM?0:1000);
 setTimeout(()=>document.documentElement.classList.add("go"),3200);
-setTimeout(()=>{$("#fabPop").hidden=false;setTimeout(()=>$("#fabPop").hidden=true,MOB?6000:12000)},9000);
-new IntersectionObserver(es=>{RBvis=es[0].isIntersecting}).observe($(".ribbon"));
-new ResizeObserver(()=>document.documentElement.style.setProperty("--bh",$("#bar").classList.contains("on")?$("#bar").offsetHeight+"px":"0px")).observe($("#bar"));
-let sct;addEventListener("scroll",()=>{if(!MOB)return;document.documentElement.classList.add("sc");clearTimeout(sct);sct=setTimeout(()=>document.documentElement.classList.remove("sc"),700)},{passive:true});
+setTimeout(()=>{$("#fabPop").hidden=false;setTimeout(()=>$("#fabPop").hidden=true,12000)},9000);
 $("#fabX").onclick=()=>$("#fabPop").hidden=true;
 $("#waFab").addEventListener("click",()=>$("#fabPop").hidden=true);
 const pg=$("#pg");let dn=false,sx=0,sl=0,moved=false;
