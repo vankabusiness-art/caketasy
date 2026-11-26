@@ -362,16 +362,16 @@ dl.sp dd.yes,dl.sp dd.no,dl.sp dd.add{border-radius:10px;padding:3px 10px;font-w
 .js .chip.in:hover{transform:translateY(-3px) rotate(-1.5deg);background:#F4ACB7;color:#3b2f26}
 .btn.wa{background:#F4ACB7;border-color:#F4ACB7;color:#3b2f26;min-height:52px;padding:10px 26px}
 .btn.wa:hover{background:#E48C9B}
-.fab{position:fixed;right:16px;bottom:20px;z-index:30;display:flex;align-items:center;gap:8px;min-height:52px;padding:0 18px 0 14px;border-radius:999px;background:#F4ACB7;color:#3b2f26;font-weight:700;text-decoration:none;box-shadow:0 6px 16px rgba(196,86,108,.3);transition:bottom .35s,transform .25s cubic-bezier(.34,1.6,.5,1)}
+.fab{position:fixed;right:16px;bottom:calc(var(--fb,0px) + 16px);z-index:30;display:flex;align-items:center;gap:8px;min-height:52px;padding:0 18px 0 14px;border-radius:999px;background:#F4ACB7;color:#3b2f26;font-weight:700;text-decoration:none;box-shadow:0 6px 16px rgba(196,86,108,.3);transition:bottom .35s,opacity .25s,transform .25s cubic-bezier(.34,1.6,.5,1)}
 .fab:hover{transform:translateY(-3px) rotate(-2deg)}
-.fabpop{position:fixed;right:16px;bottom:84px;z-index:30;max-width:240px;background:var(--card);color:var(--ink);border:2px solid #F4ACB7;border-radius:18px;padding:12px 34px 12px 14px;font-size:.9rem;transform-origin:100% 100%;animation:pop2 .6s cubic-bezier(.34,1.6,.5,1) both}
+.fabpop{position:fixed;right:16px;bottom:calc(var(--fb,0px) + 78px);z-index:30;max-width:240px;background:var(--card);color:var(--ink);border:2px solid #F4ACB7;border-radius:18px;padding:12px 34px 12px 14px;font-size:.9rem;transform-origin:100% 100%;animation:pop2 .6s cubic-bezier(.34,1.6,.5,1) both}
 .fabpop[hidden]{display:none}
 .fabpop button{position:absolute;top:4px;right:4px;width:30px;height:30px;border:0;background:none;color:var(--mute);font-size:1.2rem;cursor:pointer}
-#bar.on~.fab{bottom:84px}#bar.on~.fabpop{bottom:148px}
+@media(max-width:900px){.fab{width:52px;padding:0;justify-content:center}.fab span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.fab.sc{opacity:.35}}
 @media(prefers-reduced-motion:reduce){#intro,#wipe,.pk{display:none!important}.bubble{animation:none}}
 #intro.open .ib{animation:ibOut .6s ease forwards}
 @keyframes ibOut{from{opacity:1;transform:translate(-50%,-50%)}to{opacity:0;transform:translate(-50%,-90%) scale(.8)}}
-.vine{display:block!important;width:20px;opacity:.85}
+.vine{display:block!important;width:24px;opacity:.85}
 @media(min-width:1240px){.vine{width:64px}}
 .nv{width:158px;height:64px;left:236px}
 @media(max-width:900px){.nv{right:66px}}
@@ -751,8 +751,8 @@ watch()}
 
 const VINE={H:0,len:0,W:0,els:[],k:0};
 function buildVine(){
-const W=innerWidth>=1240?64:20,H=document.documentElement.scrollHeight;if(W===VINE.W&&Math.abs(H-VINE.H)<40)return;VINE.W=W;VINE.H=H;
-const big=W>30,c=W/2,amp=big?14:3.2,lw=big?26:11,fs=big?18:10,step=big?96:84;
+const W=innerWidth>=1240?64:24,H=document.documentElement.scrollHeight;if(W===VINE.W&&Math.abs(H-VINE.H)<40)return;VINE.W=W;VINE.H=H;
+const big=W>30,c=W/2,amp=big?8:2,lw=big?20:9,fs=big?16:9,step=big?96:84;
 let d=`M${c} 0`,items="";
 for(let y=0;y<=H;y+=24)d+=` L${(c+Math.sin(y/96)*amp).toFixed(1)} ${y}`;
 for(let y=70,i=0;y<H-40;y+=step,i++){const x=c+Math.sin(y/96)*amp,s=i%2?1:-1;
@@ -772,7 +772,7 @@ el.style.transform=`translate3d(${el.closest(".hero")?(MX*240*el.dataset.sp).toF
 if(!MOB)$$(".tcol").forEach(c=>{const r=c.parentElement.getBoundingClientRect();if(r.bottom<0||r.top>vh)return;c.style.transform=`translateY(${((r.top+r.height/2-vh/2)*c.dataset.sp).toFixed(1)}px)`});
 if(VINE.len){const lim=y+vh*.8;$$(".vp").forEach(p=>p.style.strokeDashoffset=VINE.len*(1-Math.min(1,(y+vh*.85)/H)));let k=VINE.k;while(k<VINE.els.length&&VINE.els[k][1]<lim){VINE.els[k][0].classList.add("on");k++}while(k>0&&VINE.els[k-1][1]>=lim){k--;VINE.els[k][0].classList.remove("on")}VINE.k=k}}
 let tick=false;
-const onScroll=()=>{if(!tick){tick=true;requestAnimationFrame(()=>{tick=false;frame()})}};
+let scT;const onScroll=()=>{const f=$("#waFab");f.classList.add("sc");clearTimeout(scT);scT=setTimeout(()=>f.classList.remove("sc"),700);if(!tick){tick=true;requestAnimationFrame(()=>{tick=false;frame()})}};
 
 const co=new IntersectionObserver(es=>es.forEach(x=>{if(!x.isIntersecting)return;co.unobserve(x.target);const n=+x.target.dataset.count,t0=performance.now();(function s(t){const p=Math.min(1,(t-t0)/1400);x.target.textContent=Math.round(n*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(s)})(t0)}));
 $$("[data-count]").forEach(n=>co.observe(n));
@@ -837,6 +837,7 @@ renderPlans();renderPf();renderTesti();calc();garlands();fxInit();initImmersive(
 addEventListener("scroll",onScroll,{passive:true});
 let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{renderTesti();VINE.H=0;$("#trk")._m=0;$("#alur .st")._h=0;rbU=0;buildVine();frame()},200)});
 addEventListener("load",()=>{buildVine();frame()});
+const syncFab=()=>{const b=$("#bar");document.documentElement.style.setProperty("--fb",b.classList.contains("on")?b.offsetHeight+"px":"0px")};new ResizeObserver(syncFab).observe($("#bar"));
 new ResizeObserver(()=>{clearTimeout(rt);rt=setTimeout(()=>{buildVine();frame()},300)}).observe(document.body);
 
 </script>
