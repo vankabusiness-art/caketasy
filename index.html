@@ -803,6 +803,8 @@ $$("[data-flower]").forEach(el=>{const[n,a]=el.dataset.flower.split(",");el.styl
 splitW($("#h1"),"wd");splitW($("#mf"),"w");
 $("#tk").innerHTML=Array(10).fill('<span>Cerita idemu &rarr; aku yang rapikan &rarr; DP cukup 50% &rarr; Video Canva &amp; AI &rarr; 500+ video selesai &rarr;</span>').join("");
 $("#rbt").textContent="Cerita idemu  •  aku yang rapikan  •  video Canva & AI  •  ".repeat(9);
+function rbRun(){const t=$("#rbt");t.querySelector("animate")?.remove();if(RM)return;const p=t.getComputedTextLength()/9;if(!p)return;const an=document.createElementNS("http://www.w3.org/2000/svg","animate");an.setAttribute("attributeName","startOffset");an.setAttribute("from","0");an.setAttribute("to",String(-p));an.setAttribute("dur",(p/55)+"s");an.setAttribute("repeatCount","indefinite");t.append(an)}
+document.fonts.ready.then(rbRun);
 tornEdges();cornerVine();
 if(matchMedia("(hover:hover)").matches)addEventListener("pointermove",e=>{MX=(e.clientX/innerWidth-.5)*2;MY=(e.clientY/innerHeight-.5)*2;onScroll()},{passive:true})}
 
