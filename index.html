@@ -375,6 +375,12 @@ dl.sp dd.yes,dl.sp dd.no,dl.sp dd.add{border-radius:10px;padding:3px 10px;font-w
 @media(min-width:1240px){.vine{width:64px}}
 .nv{width:158px;height:64px;left:236px}
 @media(max-width:900px){.nv{right:66px}}
+.fab,.fabpop{transition:opacity .25s,transform .25s cubic-bezier(.34,1.6,.5,1),bottom .35s}
+#bar.on~.fab,.fab{bottom:calc(16px + var(--bh,0px) + env(safe-area-inset-bottom,0px))}
+#bar.on~.fabpop,.fabpop{bottom:calc(78px + var(--bh,0px) + env(safe-area-inset-bottom,0px))}
+.sc .fab{opacity:0;transform:translateY(12px);pointer-events:none}
+.sc .fabpop{visibility:hidden}
+@media(max-width:700px){.fab{right:12px;width:48px;height:48px;min-height:0;padding:0;justify-content:center}.fab span{display:none}.fabpop{right:12px;max-width:200px;font-size:.85rem}}
 </style>
 </head>
 <body><div id="intro" aria-hidden="true"><div class="cur l"></div><div class="cur r"></div><div class="ib"><svg width="86" height="57" viewBox="0 0 60 40" style="color:#E48C9B"><use href="#bw" width="60" height="40"/></svg><b>Caketasy Service</b></div></div><div id="wipe" aria-hidden="true"></div><div id="prog" aria-hidden="true"></div><div class="vine" id="vL" aria-hidden="true"></div><div class="vine" id="vR" aria-hidden="true"></div>
@@ -779,6 +785,7 @@ $$("[data-count]").forEach(n=>co.observe(n));
 
 
 const MOB=matchMedia("(max-width:900px),(pointer:coarse)").matches;
+let RBvis=false;
 const vc=b=>/^Tidak termasuk/.test(b)?"no":/^\+Rp/.test(b)?"add":/^(Termasuk|Dicek|Gratis)|Termasuk/.test(b)?"yes":"";
 const TAG={basic:"Simpel dan hemat",standard:"Paling pas buat kebanyakan orang",premium:"Lengkap, cepat, dan diprioritaskan"};
 let MX=0,MY=0,sw=0,swT=0,lastY=0,swRun=false;
@@ -793,7 +800,7 @@ function immersive(y,vh){
 const dy=y-lastY;lastY=y;swT=Math.max(-16,Math.min(16,swT+dy*.25));if(!swRun){swRun=true;requestAnimationFrame(swayStep)}
 const tk=$("#tk");if(tk&&tk.firstChild){const w=tk.firstChild.offsetWidth||600;tk.style.transform=`translateX(${-((y*.5)%w)}px)`}
 const fi=$("#flw img");if(fi)fi.style.transform=`scale(${(1+Math.min(.14,y/Math.max(1,vh)*.07)).toFixed(3)})`;
-const rb=MOB?null:$("#rbt");if(rb){if(!rbU)rbU=(rb.getComputedTextLength()||1800)/9;rb.setAttribute("startOffset",-((y*.8)%rbU))}
+const rb=RBvis?$("#rbt"):null;if(rb){if(!rbU)rbU=(rb.getComputedTextLength()||1800)/9;rb.setAttribute("startOffset",-((y*.8)%rbU))}
 const ring=$("#ring");if(ring)ring.style.transform=`rotate(${(y*.06).toFixed(1)}deg)`;
 const fl=$("#flw");if(fl)fl.style.transform=`translate(${(MX*10).toFixed(1)}px,${(MY*8).toFixed(1)}px)`;
 const mf=$$("#mf .w");if(mf.length){const r=$("#mf").getBoundingClientRect(),p=Math.max(0,Math.min(1,(vh*.85-r.top)/(vh*.5+r.height)));mf.forEach((w,i)=>w.classList.toggle("on",i/mf.length<p*1.15))}
@@ -817,7 +824,10 @@ $("#waMain").href=WA("Halo Caketasy Service, aku mau tanya dulu ya.");$("#waFab"
 $("#chips").innerHTML=CHIPS.map(([l,t])=>`<a class="chip" data-rv="pop" href="${WA(t)}" target="_blank" rel="noopener">${l}</a>`).join("");
 setTimeout(()=>{$("#intro").classList.add("open");document.documentElement.classList.add("go")},RM?0:1000);
 setTimeout(()=>document.documentElement.classList.add("go"),3200);
-setTimeout(()=>{$("#fabPop").hidden=false;setTimeout(()=>$("#fabPop").hidden=true,12000)},9000);
+setTimeout(()=>{$("#fabPop").hidden=false;setTimeout(()=>$("#fabPop").hidden=true,MOB?6000:12000)},9000);
+new IntersectionObserver(es=>{RBvis=es[0].isIntersecting}).observe($(".ribbon"));
+new ResizeObserver(()=>document.documentElement.style.setProperty("--bh",$("#bar").classList.contains("on")?$("#bar").offsetHeight+"px":"0px")).observe($("#bar"));
+let sct;addEventListener("scroll",()=>{if(!MOB)return;document.documentElement.classList.add("sc");clearTimeout(sct);sct=setTimeout(()=>document.documentElement.classList.remove("sc"),700)},{passive:true});
 $("#fabX").onclick=()=>$("#fabPop").hidden=true;
 $("#waFab").addEventListener("click",()=>$("#fabPop").hidden=true);
 const pg=$("#pg");let dn=false,sx=0,sl=0,moved=false;
